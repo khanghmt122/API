@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @khanghmt122
+- 👋 Hi, I’m Ho Luu Bao Khang(you can call me khanghmt122)
 - 👀 I’m interested in Developing Game.
 - 🌱 I’m currently learning C++/Python
 - 💞️ I’m looking to collaborate on ...
