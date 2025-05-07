@@ -13,6 +13,7 @@ app.use(express.static('.'));
 
 // Đường dẫn đến file JSON
 const dataFile = path.join(__dirname, 'views.json');
+const ipFile = path.join(__dirname, 'viewed_ips.json');
 
 // Khởi tạo file JSON nếu chưa tồn tại
 try {
@@ -35,6 +36,15 @@ function readData() {
     }
 }
 
+function readIpData() {
+    try {
+        const data = fs.readFileSync(ipFile, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        return {};
+    }
+}
+
 // Ghi dữ liệu vào file
 function writeData(data) {
     try {
@@ -43,6 +53,10 @@ function writeData(data) {
         console.error('Lỗi khi ghi file views.json:', error);
         throw error;
     }
+}
+
+function writeIpData(data) {
+    fs.writeFileSync(ipFile, JSON.stringify(data, null, 2));
 }
 
 // API endpoints
@@ -62,15 +76,27 @@ app.get('/api/views/:pageId', (req, res) => {
 
 app.post('/api/views/:pageId/increment', (req, res) => {
     try {
-        console.log('Nhận request POST cho pageId:', req.params.pageId);
         const data = readData();
+        const ipData = readIpData();
         const pageId = req.params.pageId;
+        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+        if (!ipData[pageId]) ipData[pageId] = [];
+
+        // Nếu IP đã tồn tại thì không tăng views
+        if (ipData[pageId].includes(userIp)) {
+            return res.json({ count: data[pageId] || 0 });
+        }
+
+        // Nếu là IP mới thì tăng views và lưu lại IP
         data[pageId] = (data[pageId] || 0) + 1;
+        ipData[pageId].push(userIp);
+
         writeData(data);
-        console.log('Đã tăng lượt xem lên:', data[pageId]);
+        writeIpData(ipData);
+
         res.json({ count: data[pageId] });
     } catch (error) {
-        console.error('Lỗi trong POST /api/views/:pageId/increment:', error);
         res.status(500).json({ error: error.message });
     }
 });
