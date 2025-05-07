@@ -237,7 +237,7 @@
             </div>
         </div>
     </div>
-    <div class="musicbox-container">
+    <div class="musicbox-container" style="margin-top: 20px;">
         <div class="musicbox-border" id="musicbox-border">
           <div class="musicbox-content">
             <div class="musicbox-header">
@@ -1408,33 +1408,5 @@ function setupVisualizer() {
   setTimeout(tryConnect, 2000); // Đợi player load xong mới connect
 }
 </script>
-
-    </div> <!-- Kết thúc .bio_content_container -->
-
-    <!-- PLAYER MUSIC BOX STYLE TRẮNG ĐEN -->
-    <div class="musicbox-container">
-      <div class="musicbox-border" id="musicbox-border">
-        <div class="musicbox-content">
-          <div class="musicbox-header">
-            <span class="musicbox-title" id="musicbox-title">Tên bài hát</span>
-          </div>
-          <div class="musicbox-controls">
-            <button id="musicbox-prev" class="musicbox-btn">⏮️</button>
-            <button id="musicbox-play" class="musicbox-btn">▶️</button>
-            <button id="musicbox-next" class="musicbox-btn">⏭️</button>
-            <div class="musicbox-volume">
-              <svg class="musicbox-volume-icon" width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M3 10v4h4l5 5V5l-5 5H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/></svg>
-              <div id="musicbox-slider" class="musicbox-slider"></div>
-            </div>
-          </div>
-          <div class="musicbox-timeline">
-            <span id="musicbox-current">0:00</span>
-            <input type="range" id="musicbox-progress" min="0" max="100" value="0" step="1" />
-            <span id="musicbox-duration">0:00</span>
-          </div>
-        </div>
-        <div id="yt-player" style="display:none;"></div>
-      </div>
-    </div>
 
 </body></html>
