@@ -1,0 +1,26 @@
+runtime: nodejs18
+env: standard
+
+handlers:
+  # Serve static files
+  - url: /(.*\.(gif|png|jpg|css|js|webp|img|png))
+    static_files: \1
+    upload: .*\.(gif|png|jpg|css|js|webp|img|png)
+    secure: always
+
+  # Serve HTML files
+  - url: /(.*\.html)
+    static_files: \1
+    upload: .*\.html
+    secure: always
+
+  # Serve the API
+  - url: /api/.*
+    script: auto
+    secure: always
+
+  # Serve index.html for all other routes
+  - url: /.*
+    static_files: khang.html
+    upload: khang.html
+    secure: always 
