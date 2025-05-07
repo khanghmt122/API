@@ -164,7 +164,7 @@ async function updateStatus() {
   }
 }
 
-app.get('/api/discord-status', (req, res) => {
+app.get('/status/:id', async (req, res) => {
   try {
     const guild = client.guilds.cache.find(g => g.name === 'Discord API');
     if (!guild) return res.json({ status: 'offline', activity: null, minutes: 0 });
