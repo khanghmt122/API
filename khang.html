@@ -1122,7 +1122,7 @@ async function fetchDiscordStatus() {
         document.getElementById('discord-status-icon').src = statusIcon;
 
         // Game/app đang chơi
-        document.getElementById('discord-activity').textContent = data.activity || 'Không hoạt động';
+        document.getElementById('discord-activity-name').textContent = data.activity || 'Không hoạt động';
         document.getElementById('discord-minutes-show').textContent = (data.activity && data.minutes > 0) ? `• ${data.minutes} phút` : '';
 
         // Dòng phụ (ví dụ: Learning C++), bạn có thể để cố định hoặc lấy từ API nếu muốn
