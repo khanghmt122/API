@@ -8,10 +8,22 @@
     "deploy": "gcloud app deploy"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "discord.js": "^14.19.3",
+    "express": "^4.21.2"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khanghmt122/API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khanghmt122/API/issues"
+  },
+  "homepage": "https://github.com/khanghmt122/API#readme"
 }
