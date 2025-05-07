@@ -79,7 +79,12 @@ app.post('/api/views/:pageId/increment', (req, res) => {
         const data = readData();
         const ipData = readIpData();
         const pageId = req.params.pageId;
-        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        // Lấy IP thật sự từ x-forwarded-for (nếu có), fallback về remoteAddress
+        let userIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || req.connection?.remoteAddress;
+        if (userIp && userIp.includes(',')) {
+            userIp = userIp.split(',')[0].trim();
+        }
+        console.log('IP truy cập:', userIp);
 
         if (!ipData[pageId]) ipData[pageId] = [];
 
