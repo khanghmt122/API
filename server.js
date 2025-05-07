@@ -165,7 +165,32 @@ async function updateStatus() {
 }
 
 app.get('/api/discord-status', (req, res) => {
-  res.json(latestStatus);
+  try {
+    const guild = client.guilds.cache.find(g => g.name === 'Discord API');
+    if (!guild) return res.json({ status: 'offline', activity: null, minutes: 0 });
+    const member = await guild.members.fetch(req.params.id);
+    const presence = member.presence;
+    if (presence) {
+      let activity = null;
+      let minutes = 0;
+      const act = presence.activities.find(a => a.type === 0 || a.type === 1);
+      if (act) {
+        activity = act.name;
+        if (act.timestamps && act.timestamps.start) {
+          minutes = Math.floor((Date.now() - act.timestamps.start) / 60000);
+        }
+      }
+      return res.json({
+        status: presence.status,
+        activity,
+        minutes
+      });
+    } else {
+      return res.json({ status: 'offline', activity: null, minutes: 0 });
+    }
+  } catch (e) {
+    return res.json({ status: 'offline', activity: null, minutes: 0 });
+  }
 });
 
 client.login(process.env.DISCORD_TOKEN);
