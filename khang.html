@@ -82,7 +82,7 @@
         --descriptionColor: #ffffff;
         --backgroundColor: rgba(0, 0, 0, 0.2);
         --iconColor: unset;
-        --backgroundBlur: 0px;
+--backgroundBlur: 0px;
         --nameGlow: 0px 0px 16.5px #ffffff;
         --descriptionGlow: 0px 0px 16.5px #ffffff;
         --discordBackground: rgba(0, 0, 0, 0.2);
@@ -1095,18 +1095,15 @@ svgVolumn.addEventListener("click", function () {
 
 <!-- Discord Status Card START -->
 <div id="discord-card" style="display: flex; align-items: center; background: #111; border-radius: 20px; padding: 10px 20px; color: #fff; width: fit-content; box-shadow: 0 2px 8px #0008; margin: 24px auto 0 auto;">
-  <img id="discord-avatar" src="https://cdn.discordapp.com/avatars/877573003628670987/4e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e.webp" alt="avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #222;">
+  <img id="discord-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #222;">
   <div style="margin-left: 12px;">
     <div style="display: flex; align-items: center;">
       <span id="discord-username" style="font-weight: bold; font-size: 18px;">Khanghmt122</span>
-      <img id="discord-status-icon" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/26d4.png" alt="dnd" style="width:18px;height:18px;margin-left:8px;">
+      <img id="discord-status-icon" src="" alt="status" style="width:18px;height:18px;margin-left:8px;">
     </div>
-    <div style="font-size: 14px; margin-top: 2px;">
-      <b id="discord-activity">Playing Visual Studio Code</b>
-      <div id="discord-detail" style="font-size: 13px; color: #aaa;">Learning C++</div>
-    </div>
+    <div id="discord-activity" style="font-size: 14px; color: #aaa; margin-top: 2px;">Đang cập nhật...</div>
+    <div id="discord-minutes" style="font-size: 12px; color: #888;"></div>
   </div>
-  <img id="discord-app-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="app" style="width:40px;height:40px;margin-left:16px;">
 </div>
 <!-- Discord Status Card END -->
 
@@ -1136,7 +1133,7 @@ async function fetchDiscordStatus() {
         document.getElementById('discord-activity').textContent = data.activity || 'Không hoạt động';
 
         // Dòng phụ (ví dụ: Learning C++), bạn có thể để cố định hoặc lấy từ API nếu muốn
-        document.getElementById('discord-detail').textContent = (data.activity === 'Cursor') ? 'Learning C++' : '';
+        document.getElementById('discord-minutes').textContent = (data.activity === 'Cursor') ? 'Learning C++' : '';
 
         // Icon app (ví dụ: C++)
         document.getElementById('discord-app-icon').src = (data.activity === 'Cursor')
@@ -1144,7 +1141,7 @@ async function fetchDiscordStatus() {
             : 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg';
     } catch (e) {
         document.getElementById('discord-activity').textContent = 'Lỗi API';
-        document.getElementById('discord-detail').textContent = '';
+        document.getElementById('discord-minutes').textContent = '';
     }
 }
 fetchDiscordStatus();
