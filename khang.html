@@ -71,11 +71,18 @@
                 <svg class="volumeIcon" onclick="toggleActive(this);" id="volumeIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48" style="cursor: pointer;"><defs>
         <mask id="volumeMedium"><g fill="none" stroke="#fff" stroke-width="4"><path fill="#555" stroke-linejoin="round" d="M24 6v36c-7 0-12.201-9.16-12.201-9.16H6a2 2 0 0 1-2-2V17.01a2 2 0 0 1 2-2h5.799S17 6 24 6Z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M32 15a12 12 0 0 1 1.684 1.859A12.07 12.07 0 0 1 36 24c0 2.654-.846 5.107-2.278 7.09A12 12 0 0 1 32 33"></path><path stroke-linecap="round" d="M34.236 41.186C40.084 37.696 44 31.305 44 24c0-7.192-3.796-13.496-9.493-17.02"></path></g></mask>
         </defs><path id="changeMask" fill="currentColor" d="M0 0h48v48H0z" mask="url(#volumeMedium)"></path></svg>
-        <span id="audio-title" style="display:inline-block;max-width:140px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;vertical-align:middle;font-weight:600;font-size:16px;color:#fff;animation:audioTitleMove 8s linear infinite alternate;"></span>
+        <span id="audio-title" style="display:inline-block;max-width:140px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;vertical-align:middle;font-weight:600;font-size:16px;color:#fff;animation:audioTitleMove 8s linear infinite alternate;">Love is</span>
     </div>    
     <div class="slider-container">
-        <div id="slider1" class="noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr"><div class="noUi-base"><div class="noUi-connects"><div class="noUi-connect" style="transform: translate(0%, 0px) scale(0.51, 1);"></div></div><div class="noUi-origin" style="transform: translate(-490%, 0px); z-index: 4;"><div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="51.0" aria-valuetext="51"><div class="noUi-touch-area"></div></div></div></div></div>
-        <input type="hidden" name="bgOpacity" id="sliderValue1" value="51" readonly="">
+        <div id="slider1" class="noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr"></div>
+        <input type="hidden" name="bgOpacity" id="sliderValue1" value="100" readonly="">
+    </div>
+    <div style="margin-top: 10px; text-align: center;">
+        <div id="yt-player"></div>
+        <div style="margin-top: 8px;">
+            <button id="yt-play" style="margin-right: 10px;">⏯️</button>
+            <span id="yt-current">0:00</span> / <span id="yt-duration">0:00</span>
+        </div>
     </div>
 </div>
             <div class="bio-container" style="
@@ -1155,6 +1162,56 @@ async function fetchDiscordStatus() {
 }
 fetchDiscordStatus();
 setInterval(fetchDiscordStatus, 10000);
+</script>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+let ytPlayer;
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('yt-player', {
+        height: '0',
+        width: '0',
+        videoId: 'znQEcXKvJDE',
+        playerVars: { 'autoplay': 0, 'controls': 0, 'rel': 0 },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+function onPlayerReady(event) {
+    document.getElementById('yt-play').onclick = function() {
+        if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+            ytPlayer.pauseVideo();
+        } else {
+            ytPlayer.playVideo();
+        }
+    };
+    // Volume slider
+    createSlider('slider1', 'sliderValue1', '');
+    const slider = document.getElementById('slider1').noUiSlider;
+    slider.on('update', function (values, handle) {
+        const volumeValue = parseFloat(values[handle]);
+        ytPlayer.setVolume(volumeValue);
+    });
+    ytPlayer.setVolume(100);
+    // Cập nhật thời gian
+    setInterval(() => {
+        if (ytPlayer && ytPlayer.getDuration) {
+            let cur = ytPlayer.getCurrentTime ? ytPlayer.getCurrentTime() : 0;
+            let dur = ytPlayer.getDuration ? ytPlayer.getDuration() : 0;
+            document.getElementById('yt-current').innerText = formatTime(cur);
+            document.getElementById('yt-duration').innerText = formatTime(dur);
+        }
+    }, 500);
+}
+function onPlayerStateChange(event) {}
+function formatTime(sec) {
+    sec = Math.floor(sec);
+    let min = Math.floor(sec / 60);
+    let s = sec % 60;
+    return `${min}:${s.toString().padStart(2, '0')}`;
+}
 </script>
 
 </body></html>
