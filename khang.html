@@ -461,7 +461,7 @@
                 </div>
             </div>
         </div>
-        <div class="musicbox-container" style="margin-top: 20px;">
+        <div class="musicbox-container" style="margin-top: 12px;">
             <div class="musicbox-border" id="musicbox-border">
                 <div class="musicbox-content">
                     <div class="musicbox-header">
@@ -2048,14 +2048,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100vw;
+            /* Đảm bảo chiếm toàn bộ chiều ngang */
         }
 
         .musicbox-container {
-            margin: 20px auto 0 auto;
+            margin-top: 12px;
+            /* Hoặc 16px nếu muốn sát hơn nữa */
             display: flex;
             justify-content: center;
             align-items: center;
-            width: fit-content;
+            width: 100%;
+            /* Đảm bảo căn giữa theo chiều ngang */
         }
 
         .musicbox-border {
