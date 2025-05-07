@@ -184,7 +184,7 @@
                                         <span id="discord-activity" class="discord_description" style="display: block; font-size: 14px;">
                                             <img id="discord-activity-icon-dynamic" style="width:32px;height:32px;vertical-align:middle;border-radius:8px;margin-right:6px;display:inline-block;object-fit:cover;" />
                                             <b class="high">Playing</b> <span id="discord-activity-name"></span>
-                                            <span id="discord-minutes-show" style="font-size: 13px; color: #aaa; margin-left: 8px;"></span> <br>
+                                            <span id="discord-minutes-show" style="color: #43b581; font-weight: 500; margin-left: 4px;"></span> <br>
                                             <span id="discord-detail"></span>
                                         </span>
                                     </div>
@@ -1122,7 +1122,14 @@ async function fetchDiscordStatus() {
 
         // Game/app đang chơi
         document.getElementById('discord-activity-name').textContent = data.activity || 'Không hoạt động';
-        document.getElementById('discord-minutes-show').textContent = (data.activity && data.minutes > 0) ? `• ${data.minutes} phút` : '';
+        let minutesText = '';
+        if (data.activity && data.minutes > 0) {
+            const hours = Math.floor(data.minutes / 60);
+            const mins = data.minutes % 60;
+            const timeStr = hours > 0 ? `${hours}:${mins.toString().padStart(2, '0')}` : `${mins}:00`;
+            minutesText = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>${timeStr}`;
+        }
+        document.getElementById('discord-minutes-show').innerHTML = minutesText;
 
         // Dòng phụ (ví dụ: Learning C++), bạn có thể để cố định hoặc lấy từ API nếu muốn
         document.getElementById('discord-minutes').textContent = (data.activity === 'Cursor') ? 'Learning C++' : '';
