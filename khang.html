@@ -1214,4 +1214,244 @@ function formatTime(sec) {
 }
 </script>
 
+<!-- PLAYER MUSIC BOX STYLE TRẮNG ĐEN -->
+<div class="musicbox-container">
+  <div class="musicbox-border" id="musicbox-border">
+    <div class="musicbox-content">
+      <div class="musicbox-header">
+        <span class="musicbox-title" id="musicbox-title">Tên bài hát</span>
+      </div>
+      <div class="musicbox-controls">
+        <button id="musicbox-prev" class="musicbox-btn">⏮️</button>
+        <button id="musicbox-play" class="musicbox-btn">▶️</button>
+        <button id="musicbox-next" class="musicbox-btn">⏭️</button>
+        <div class="musicbox-volume">
+          <svg class="musicbox-volume-icon" width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M3 10v4h4l5 5V5l-5 5H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/></svg>
+          <div id="musicbox-slider" class="musicbox-slider"></div>
+        </div>
+      </div>
+      <div class="musicbox-timeline">
+        <span id="musicbox-current">0:00</span>
+        <input type="range" id="musicbox-progress" min="0" max="100" value="0" step="1" />
+        <span id="musicbox-duration">0:00</span>
+      </div>
+    </div>
+    <div id="yt-player" style="display:none;"></div>
+  </div>
+</div>
+<style>
+.musicbox-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+.musicbox-border {
+  background: rgba(0,0,0,0.7);
+  border-radius: 32px;
+  box-shadow: 0 0 32px 8px #fff, 0 0 0 4px #222 inset;
+  padding: 32px 40px 24px 40px;
+  transition: box-shadow 0.2s;
+  min-width: 420px;
+  max-width: 90vw;
+}
+.musicbox-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.musicbox-header {
+  margin-bottom: 16px;
+}
+.musicbox-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.musicbox-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.musicbox-btn {
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px #0008;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.musicbox-btn:hover {
+  background: #444;
+}
+.musicbox-volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+.musicbox-volume-icon {
+  vertical-align: middle;
+}
+.musicbox-slider {
+  width: 80px;
+  height: 4px;
+  background: #fff2;
+  border-radius: 2px;
+  position: relative;
+}
+.musicbox-timeline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+#musicbox-progress {
+  flex: 1;
+  accent-color: #fff;
+  background: #fff2;
+  border-radius: 2px;
+  height: 4px;
+}
+#musicbox-current, #musicbox-duration {
+  color: #fff;
+  font-size: 0.95rem;
+  min-width: 40px;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .musicbox-border { min-width: unset; padding: 16px 8px; }
+  .musicbox-title { font-size: 1.1rem; }
+}
+</style>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+// Playlist mẫu, bạn có thể thêm nhiều bài hát YouTube ở đây
+const playlist = [
+  { id: 'znQEcXKvJDE', title: 'why mona - Wannabe (Lyrics)' },
+  { id: 'kXYiU_JCYtU', title: 'Linkin Park - Numb' },
+];
+let currentTrack = 0;
+let ytPlayer, progressInterval;
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('yt-player', {
+    height: '0', width: '0',
+    videoId: playlist[currentTrack].id,
+    playerVars: { 'autoplay': 0, 'controls': 0, 'rel': 0 },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+function onPlayerReady() {
+  updateMusicBoxInfo();
+  document.getElementById('musicbox-play').onclick = function() {
+    if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+      ytPlayer.pauseVideo();
+    } else {
+      ytPlayer.playVideo();
+    }
+  };
+  document.getElementById('musicbox-next').onclick = function() {
+    currentTrack = (currentTrack + 1) % playlist.length;
+    ytPlayer.loadVideoById(playlist[currentTrack].id);
+    updateMusicBoxInfo();
+  };
+  document.getElementById('musicbox-prev').onclick = function() {
+    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+    ytPlayer.loadVideoById(playlist[currentTrack].id);
+    updateMusicBoxInfo();
+  };
+  // Volume slider
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.min = 0; slider.max = 100; slider.value = 100;
+  slider.style.width = '80px';
+  slider.oninput = function() { ytPlayer.setVolume(this.value); };
+  document.getElementById('musicbox-slider').appendChild(slider);
+  ytPlayer.setVolume(100);
+  // Progress bar
+  const progress = document.getElementById('musicbox-progress');
+  progress.addEventListener('input', function() {
+    if (ytPlayer && ytPlayer.getDuration) {
+      const seekTo = ytPlayer.getDuration() * (progress.value / 100);
+      ytPlayer.seekTo(seekTo, true);
+    }
+  });
+  // Visualizer border effect
+  setupVisualizer();
+}
+function onPlayerStateChange(event) {
+  const playBtn = document.getElementById('musicbox-play');
+  if (event.data === YT.PlayerState.PLAYING) {
+    playBtn.textContent = '⏸️';
+    progressInterval = setInterval(updateProgress, 500);
+  } else {
+    playBtn.textContent = '▶️';
+    clearInterval(progressInterval);
+  }
+}
+function updateMusicBoxInfo() {
+  document.getElementById('musicbox-title').textContent = playlist[currentTrack].title;
+}
+function updateProgress() {
+  if (!ytPlayer || !ytPlayer.getCurrentTime) return;
+  const cur = ytPlayer.getCurrentTime();
+  const dur = ytPlayer.getDuration();
+  document.getElementById('musicbox-current').textContent = formatTime(cur);
+  document.getElementById('musicbox-duration').textContent = formatTime(dur);
+  document.getElementById('musicbox-progress').value = dur ? (cur / dur * 100) : 0;
+}
+function formatTime(sec) {
+  sec = Math.floor(sec);
+  let min = Math.floor(sec / 60);
+  let s = sec % 60;
+  return `${min}:${s.toString().padStart(2, '0')}`;
+}
+// Visualizer border effect
+function setupVisualizer() {
+  // Lấy audio từ YouTube player
+  const border = document.getElementById('musicbox-border');
+  let audioCtx, analyser, source, frequencyData;
+  function tryConnect() {
+    if (!ytPlayer || !ytPlayer.getIframe) return;
+    const iframe = ytPlayer.getIframe();
+    if (!iframe) return;
+    // Tạo audio context và lấy stream từ iframe
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!analyser) analyser = audioCtx.createAnalyser();
+    if (!frequencyData) frequencyData = new Uint8Array(analyser.frequencyBinCount);
+    // Sử dụng captureStream nếu browser hỗ trợ
+    try {
+      const stream = iframe.captureStream ? iframe.captureStream() : null;
+      if (stream) {
+        if (!source) source = audioCtx.createMediaStreamSource(stream);
+        source.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        renderVisualizer();
+      }
+    } catch (e) {}
+  }
+  function renderVisualizer() {
+    requestAnimationFrame(renderVisualizer);
+    if (!analyser) return;
+    analyser.getByteFrequencyData(frequencyData);
+    const avg = frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
+    const maxGlow = 60;
+    const currentGlow = Math.max(8, (avg / 255) * maxGlow);
+    border.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow * 0.5}px #fff, 0 0 0 4px #222 inset`;
+  }
+  setTimeout(tryConnect, 2000); // Đợi player load xong mới connect
+}
+</script>
+
 </body></html>
