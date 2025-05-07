@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const { Client, GatewayIntentBits } = require('discord.js');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -110,6 +111,64 @@ app.post('/api/views/:pageId/increment', (req, res) => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'khang.html'));
 });
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMembers
+  ]
+});
+
+let latestStatus = {
+  status: 'offline',
+  activity: null,
+  minutes: 0
+};
+
+const USER_ID = '877573003628670987';
+
+client.on('ready', async () => {
+  console.log(`Bot đã đăng nhập với tên ${client.user.tag}`);
+  setInterval(updateStatus, 10000); // Cập nhật mỗi 10s
+});
+
+async function updateStatus() {
+  try {
+    // Lấy guild đầu tiên có tên là "Discord API"
+    const guild = client.guilds.cache.find(g => g.name === 'Discord API');
+    if (!guild) return;
+    const member = await guild.members.fetch(USER_ID);
+    const presence = member.presence;
+    if (presence) {
+      latestStatus.status = presence.status;
+      const activity = presence.activities.find(a => a.type === 0 || a.type === 1); // Playing/Custom
+      if (activity) {
+        latestStatus.activity = activity.name;
+        if (activity.timestamps && activity.timestamps.start) {
+          latestStatus.minutes = Math.floor((Date.now() - activity.timestamps.start) / 60000);
+        } else {
+          latestStatus.minutes = 0;
+        }
+      } else {
+        latestStatus.activity = null;
+        latestStatus.minutes = 0;
+      }
+    } else {
+      latestStatus.status = 'offline';
+      latestStatus.activity = null;
+      latestStatus.minutes = 0;
+    }
+  } catch (e) {
+    console.error('Lỗi lấy status:', e);
+  }
+}
+
+app.get('/api/discord-status', (req, res) => {
+  res.json(latestStatus);
+});
+
+client.login(process.env.DISCORD_TOKEN);
 
 app.listen(port, () => {
     console.log(`Server đang chạy tại port ${port}`);
