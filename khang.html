@@ -183,7 +183,9 @@
                                     <div style="width: 0;flex: 1;">
                                         <span id="discord-username" class="discord_name" style="font-size: 22px;">Khanghmt122</span>
                                         <span id="discord-activity" class="discord_description" style="display: block; font-size: 14px;">
-                                            <b class="high">Playing</b> <span id="discord-activity-name"></span> <br>
+                                            <img id="discord-activity-icon-dynamic" style="width:32px;height:32px;vertical-align:middle;border-radius:8px;margin-right:6px;display:inline-block;object-fit:cover;" />
+                                            <b class="high">Playing</b> <span id="discord-activity-name"></span>
+                                            <span id="discord-minutes-show" style="font-size: 13px; color: #aaa; margin-left: 8px;"></span> <br>
                                             <span id="discord-detail"></span>
                                         </span>
                                     </div>
@@ -1122,6 +1124,7 @@ async function fetchDiscordStatus() {
 
         // Game/app đang chơi
         document.getElementById('discord-activity').textContent = data.activity || 'Không hoạt động';
+        document.getElementById('discord-minutes-show').textContent = (data.activity && data.minutes > 0) ? `• ${data.minutes} phút` : '';
 
         // Dòng phụ (ví dụ: Learning C++), bạn có thể để cố định hoặc lấy từ API nếu muốn
         document.getElementById('discord-minutes').textContent = (data.activity === 'Cursor') ? 'Learning C++' : '';
@@ -1130,6 +1133,15 @@ async function fetchDiscordStatus() {
         document.getElementById('discord-app-icon').src = (data.activity === 'Cursor')
             ? 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg'
             : 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg';
+
+        // Hiển thị icon activity nếu có
+        const activityIconEl = document.getElementById('discord-activity-icon-dynamic');
+        if (data.activity_icon) {
+            activityIconEl.src = data.activity_icon;
+            activityIconEl.style.display = 'inline-block';
+        } else {
+            activityIconEl.style.display = 'none';
+        }
     } catch (e) {
         document.getElementById('discord-activity').textContent = 'Lỗi API';
         document.getElementById('discord-minutes').textContent = '';

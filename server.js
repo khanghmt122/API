@@ -167,30 +167,49 @@ async function updateStatus() {
 app.get('/status/:id', async (req, res) => {
   try {
     const guild = client.guilds.cache.find(g => g.name === 'Discord API');
-    if (!guild) return res.json({ status: 'offline', activity: null, minutes: 0, avatar: null });
+    if (!guild) return res.json({ status: 'offline', activity: null, minutes: 0, avatar: null, activity_icon: null });
     const member = await guild.members.fetch(req.params.id);
     const presence = member.presence;
     if (presence) {
       let activity = null;
       let minutes = 0;
+      let activity_icon = null;
       const act = presence.activities.find(a => a.type === 0 || a.type === 1);
       if (act) {
         activity = act.name;
         if (act.timestamps && act.timestamps.start) {
           minutes = Math.floor((Date.now() - act.timestamps.start) / 60000);
         }
+        // Lấy icon activity nếu có
+        if (act.assets) {
+          if (act.assets.largeImageURL) {
+            activity_icon = act.assets.largeImageURL;
+          } else if (act.assets.large_image) {
+            // Nếu là custom app/game, Discord trả về id, cần build lại URL
+            if (act.assets.large_image.startsWith('mp:external')) {
+              activity_icon = `https://media.discordapp.net/${act.assets.large_image}`;
+            } else if (act.assets.large_image.startsWith('spotify:')) {
+              activity_icon = null; // Spotify không public icon
+            } else {
+              activity_icon = `https://cdn.discordapp.com/app-assets/${act.applicationId}/${act.assets.large_image}.png`;
+            }
+          } else if (act.assets.small_image) {
+            activity_icon = `https://cdn.discordapp.com/app-assets/${act.applicationId}/${act.assets.small_image}.png`;
+          }
+        }
       }
       return res.json({
         status: presence.status,
         activity,
         minutes,
-        avatar: member.user.avatar
+        avatar: member.user.avatar,
+        activity_icon
       });
     } else {
-      return res.json({ status: 'offline', activity: null, minutes: 0, avatar: null });
+      return res.json({ status: 'offline', activity: null, minutes: 0, avatar: null, activity_icon: null });
     }
   } catch (e) {
-    return res.json({ status: 'offline', activity: null, minutes: 0, avatar: null });
+    return res.json({ status: 'offline', activity: null, minutes: 0, avatar: null, activity_icon: null });
   }
 });
 
