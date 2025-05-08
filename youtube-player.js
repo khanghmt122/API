@@ -5,9 +5,13 @@
   let isPlaying = false;
 
   const playlist = [
-    { id: 'znQEcXKvJDE', title: 'why mona - Wannabe (Lyrics)' },
-    { id: 'kXYiU_JCYtU', title: 'Linkin Park - Numb' },
-    { id: '3YxaaGgTQYM', title: 'Evanescence - Bring Me To Life' }
+    { id: 'oJsqyd_7Urg', title: 'Cupid' },
+    { id: '1IXOdjVTbcw', title: 'Feels' },
+    { id: 'IDNotlBgP00', title: 'TAY TO' },
+    { id: 'DEHFZYaX5e8', title: 'Từng ngày yêu em' },
+    { id: 'BcqxLCWn-CE', title: 'Lauv - I Like Me Better' },
+    { id: 'Mlq9jrXbEFo', title: 'Heather x Eyes Blue' },
+    { id: '91vIcHGBlo4', title: 'Anh Là Ai?' }
   ];
 
   let currentTrack = 0;
