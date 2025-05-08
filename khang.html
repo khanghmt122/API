@@ -462,7 +462,7 @@
             </div>
         </div>
     </div>
-    <div class="musicbox-container" style="margin-top: 0;">
+    <div class="musicbox-container" style="margin-top: 12px;">
         <div class="musicbox-border" id="musicbox-border">
             <div class="musicbox-content">
                 <div class="musicbox-header">
@@ -2072,7 +2072,7 @@
         }
 
         .musicbox-container {
-            margin-top: 0;
+            margin-top: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -2080,30 +2080,49 @@
         }
 
         .musicbox-border {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.15);
             border-radius: 32px;
-            box-shadow: 0 0 32px 8px #fff, 0 0 0 4px #222 inset;
-            padding: 32px 40px 24px 40px;
-            transition: box-shadow 0.2s;
-            min-width: 420px;
+            box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #b71c1c inset;
+            padding: 20px 32px 16px 32px;
+            min-width: 320px;
             max-width: 90vw;
+            width: 730px;
+            /* Bằng bio-container */
+            border: 2px solid #b71c1c;
+            transition: box-shadow 0.2s;
+            position: relative;
+        }
+
+        .musicbox-border.pulse {
+            animation: pulse-musicbox 1s infinite;
+        }
+
+        @keyframes pulse-musicbox {
+            0% {
+                box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #b71c1c inset;
+            }
+
+            50% {
+                box-shadow: 0 0 48px 12px #b71c1c, 0 0 0 2px #b71c1c inset;
+            }
+
+            100% {
+                box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #b71c1c inset;
+            }
+        }
+
+        .musicbox-title {
+            color: #b71c1c;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
         }
 
         .musicbox-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        .musicbox-header {
-            margin-bottom: 16px;
-        }
-
-        .musicbox-title {
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
         }
 
         .musicbox-controls {
@@ -2347,6 +2366,42 @@
             iconPause.style.display = isPlaying ? 'block' : 'none';
             // Thêm code play/pause nhạc ở đây
         };
+    </script>
+
+    <script>
+        // Visualizer: nhấp nháy viền ngoài musicbox theo nhạc
+        function setupMusicboxVisualizer() {
+            const border = document.getElementById('musicbox-border');
+            let audioCtx, analyser, source, frequencyData;
+            function tryConnect() {
+                if (!window.ytPlayer || !window.ytPlayer.getIframe) return;
+                const iframe = window.ytPlayer.getIframe();
+                if (!iframe) return;
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (!analyser) analyser = audioCtx.createAnalyser();
+                if (!frequencyData) frequencyData = new Uint8Array(analyser.frequencyBinCount);
+                try {
+                    const stream = iframe.captureStream ? iframe.captureStream() : null;
+                    if (stream) {
+                        if (!source) source = audioCtx.createMediaStreamSource(stream);
+                        source.connect(analyser);
+                        analyser.connect(audioCtx.destination);
+                        renderVisualizer();
+                    }
+                } catch (e) { }
+            }
+            function renderVisualizer() {
+                requestAnimationFrame(renderVisualizer);
+                if (!analyser) return;
+                analyser.getByteFrequencyData(frequencyData);
+                const avg = frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
+                const maxGlow = 48;
+                const currentGlow = Math.max(8, (avg / 255) * maxGlow);
+                border.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow * 0.5}px #b71c1c, 0 0 0 2px #b71c1c inset`;
+            }
+            setTimeout(tryConnect, 2000);
+        }
+        setupMusicboxVisualizer();
     </script>
 
 </body>
