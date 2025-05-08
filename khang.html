@@ -462,7 +462,7 @@
             </div>
         </div>
     </div>
-    <div class="musicbox-container" style="margin-top: 12px;">
+    <div class="musicbox-container" style="margin-top: 16px;">
         <div class="musicbox-border" id="musicbox-border">
             <div class="musicbox-content">
                 <div class="musicbox-header">
@@ -2068,11 +2068,10 @@
             flex-direction: column;
             align-items: center;
             width: 100vw;
-            /* Đảm bảo chiếm toàn bộ chiều ngang */
         }
 
         .musicbox-container {
-            margin-top: 12px;
+            margin-top: 16px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -2082,13 +2081,13 @@
         .musicbox-border {
             background: rgba(0, 0, 0, 0.15);
             border-radius: 32px;
-            box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #b71c1c inset;
+            box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #fff inset;
             padding: 20px 32px 16px 32px;
             min-width: 320px;
             max-width: 90vw;
             width: 730px;
             /* Bằng bio-container */
-            border: 2px solid #b71c1c;
+            border: 2px solid #fff;
             transition: box-shadow 0.2s;
             position: relative;
         }
@@ -2099,20 +2098,20 @@
 
         @keyframes pulse-musicbox {
             0% {
-                box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #b71c1c inset;
+                box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #fff inset;
             }
 
             50% {
-                box-shadow: 0 0 48px 12px #b71c1c, 0 0 0 2px #b71c1c inset;
+                box-shadow: 0 0 48px 12px #fff, 0 0 0 2px #fff inset;
             }
 
             100% {
-                box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #b71c1c inset;
+                box-shadow: 0 0 24px 4px #fff, 0 0 0 2px #fff inset;
             }
         }
 
         .musicbox-title {
-            color: #b71c1c;
+            color: #fff;
             font-size: 1.3rem;
             font-weight: 600;
             text-align: center;
@@ -2397,7 +2396,7 @@
                 const avg = frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
                 const maxGlow = 48;
                 const currentGlow = Math.max(8, (avg / 255) * maxGlow);
-                border.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow * 0.5}px #b71c1c, 0 0 0 2px #b71c1c inset`;
+                border.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow * 0.5}px #fff, 0 0 0 2px #fff inset`;
             }
             setTimeout(tryConnect, 2000);
         }
