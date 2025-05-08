@@ -461,53 +461,52 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="musicbox-container" style="margin-top: 16px;">
-        <div class="musicbox-border" id="musicbox-border">
-            <div class="musicbox-content">
-                <div class="musicbox-header">
-                    <span class="musicbox-title" id="musicbox-title">Tên bài hát</span>
-                </div>
-                <div class="musicbox-controls">
-                    <button id="musicbox-prev" class="musicbox-btn">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="16,4 16,20 4,12" />
-                            <rect x="18" y="4" width="2" height="16" rx="1" />
-                        </svg>
-                    </button>
-                    <button id="musicbox-play" class="musicbox-btn play-pause-btn">
-                        <svg id="playPauseIcon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon id="iconPlay" points="6,4 20,12 6,20" style="display:block" />
-                            <g id="iconPause" style="display:none">
-                                <rect x="6" y="4" width="4" height="16"></rect>
-                                <rect x="14" y="4" width="4" height="16"></rect>
-                            </g>
-                        </svg>
-                    </button>
-                    <button id="musicbox-next" class="musicbox-btn">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="8,4 8,20 20,12" />
-                            <rect x="4" y="4" width="2" height="16" rx="1" />
-                        </svg>
-                    </button>
-                    <div class="musicbox-volume">
-                        <svg class="musicbox-volume-icon" width="20" height="20" viewBox="0 0 24 24">
-                            <path fill="#fff"
-                                d="M3 10v4h4l5 5V5l-5 5H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" />
-                        </svg>
-                        <div id="musicbox-slider" class="musicbox-slider"></div>
+        <div class="musicbox-container" style="margin-top: 16px;">
+            <div class="musicbox-border" id="musicbox-border">
+                <div class="musicbox-content">
+                    <div class="musicbox-header">
+                        <span class="musicbox-title" id="musicbox-title">Tên bài hát</span>
+                    </div>
+                    <div class="musicbox-controls">
+                        <button id="musicbox-prev" class="musicbox-btn">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="16,4 16,20 4,12" />
+                                <rect x="18" y="4" width="2" height="16" rx="1" />
+                            </svg>
+                        </button>
+                        <button id="musicbox-play" class="musicbox-btn play-pause-btn">
+                            <svg id="playPauseIcon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon id="iconPlay" points="6,4 20,12 6,20" style="display:block" />
+                                <g id="iconPause" style="display:none">
+                                    <rect x="6" y="4" width="4" height="16"></rect>
+                                    <rect x="14" y="4" width="4" height="16"></rect>
+                                </g>
+                            </svg>
+                        </button>
+                        <button id="musicbox-next" class="musicbox-btn">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="8,4 8,20 20,12" />
+                                <rect x="4" y="4" width="2" height="16" rx="1" />
+                            </svg>
+                        </button>
+                        <div class="musicbox-volume">
+                            <svg class="musicbox-volume-icon" width="20" height="20" viewBox="0 0 24 24">
+                                <path fill="#fff"
+                                    d="M3 10v4h4l5 5V5l-5 5H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" />
+                            </svg>
+                            <div id="musicbox-slider" class="musicbox-slider"></div>
+                        </div>
+                    </div>
+                    <div class="musicbox-timeline">
+                        <span id="musicbox-current">0:00</span>
+                        <input type="range" id="musicbox-progress" min="0" max="100" value="0" step="1" />
+                        <span id="musicbox-duration">0:00</span>
                     </div>
                 </div>
-                <div class="musicbox-timeline">
-                    <span id="musicbox-current">0:00</span>
-                    <input type="range" id="musicbox-progress" min="0" max="100" value="0" step="1" />
-                    <span id="musicbox-duration">0:00</span>
-                </div>
+                <div id="yt-player" style="display:none;"></div>
             </div>
-            <div id="yt-player" style="display:none;"></div>
         </div>
     </div>
-
     <style>
         .tippy-content {
             font-size: 14px;
@@ -2070,11 +2069,23 @@
             width: 100vw;
         }
 
+        .bio-container,
+        .musicbox-container {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            position: static !important;
+        }
+
         .musicbox-container {
             margin-top: 16px;
+            width: 730px;
+            /* hoặc width: 100%; nếu muốn responsive */
+            max-width: 90vw;
             display: flex;
             justify-content: center;
-            align-items: center;
+        }
+
+        .musicbox-border {
             width: 100%;
         }
 
@@ -2209,7 +2220,13 @@
         const playlist = [
             { id: 'oJsqyd_7Urg', title: 'Cupid' },
             { id: '1IXOdjVTbcw', title: 'Feels' },
+            { id: 'IDNotlBgP00', title: 'TAY TO' }
+            { id: 'DEHFZYaX5e8', title: 'Từng ngày yêu em' }
+            { id: 'BcqxLCWn-CE', title: 'Lauv - I Like Me Better' },
+            { id: 'Mlq9jrXbEFo', title: 'Heather x Eyes Blue' },
             { id: '91vIcHGBlo4', title: 'Anh Là Ai?' }
+            { id: '6aBnhxRvmok', title: 'Simp Gái 808 | Low G' }
+
         ];
         let currentTrack = 0;
         let ytPlayer, progressInterval;
@@ -2259,8 +2276,8 @@
                     ytPlayer.seekTo(seekTo, true);
                 }
             });
-            // Visualizer border effect
-            setupVisualizer();
+            // Visualizer nborder effect
+            // setupVisualizer();
         }
         function onPlayerStateChange(event) {
             const playBtn = document.getElementById('musicbox-play');
@@ -2360,11 +2377,38 @@
         const iconPause = document.getElementById('iconPause');
         let isPlaying = false;
         playPauseBtn.onclick = function () {
-            isPlaying = !isPlaying;
-            iconPlay.style.display = isPlaying ? 'none' : 'block';
-            iconPause.style.display = isPlaying ? 'block' : 'none';
-            // Thêm code play/pause nhạc ở đây
+            if (ytPlayer) {
+                if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+                    ytPlayer.pauseVideo();
+                    isPlaying = false;
+                } else {
+                    ytPlayer.playVideo();
+                    isPlaying = true;
+                }
+                iconPlay.style.display = isPlaying ? 'none' : 'block';
+                iconPause.style.display = isPlaying ? 'block' : 'none';
+            }
         };
+
+        function onPlayerStateChange(event) {
+            const playBtn = document.getElementById('musicbox-play');
+            if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                iconPlay.style.display = 'none';
+                iconPause.style.display = 'block';
+                progressInterval = setInterval(updateProgress, 500);
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                isPlaying = false;
+                iconPlay.style.display = 'block';
+                iconPause.style.display = 'none';
+                clearInterval(progressInterval);
+            } else if (event.data === YT.PlayerState.ENDED) {
+                // Tự động phát bài tiếp theo
+                currentTrack = (currentTrack + 1) % playlist.length;
+                ytPlayer.loadVideoById(playlist[currentTrack].id);
+                updateMusicBoxInfo();
+            }
+        }
     </script>
 
     <script>
