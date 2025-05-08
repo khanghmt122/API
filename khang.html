@@ -584,6 +584,13 @@
                 perspective: 400,
                 easing: `cubic-bezier(.03,.98,.52,.99)`,
             });
+            // Thêm hiệu ứng tilt cho musicbox-border
+            $(".musicbox-border").tilt({
+                maxTilt: 8,
+                speed: 1200,
+                perspective: 400,
+                easing: `cubic-bezier(.03,.98,.52,.99)`,
+            });
         });
     </script>
     <script>
@@ -2123,8 +2130,8 @@
 
         .musicbox-title {
             color: #fff;
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 700;
             text-align: center;
             margin-bottom: 8px;
         }
@@ -2410,7 +2417,7 @@
     </script>
 
     <script>
-        // Visualizer: nhấp nháy viền ngoài musicbox theo nhạc
+        // Visualizer: nhấp nháy viền ngoài musicbox theo nhạc, giống bio-container
         function setupMusicboxVisualizer() {
             const border = document.getElementById('musicbox-border');
             let audioCtx, analyser, source, frequencyData;
@@ -2436,9 +2443,9 @@
                 if (!analyser) return;
                 analyser.getByteFrequencyData(frequencyData);
                 const avg = frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
-                const maxGlow = 48;
-                const currentGlow = Math.max(8, (avg / 255) * maxGlow);
-                border.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow * 0.5}px #fff, 0 0 0 2px #fff inset`;
+                const maxGlow = 120; // tăng độ sáng
+                const currentGlow = Math.max(16, (avg / 255) * maxGlow);
+                border.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow * 0.5}px #fff, 0 0 0 4px #fff inset`;
             }
             setTimeout(tryConnect, 2000);
         }
