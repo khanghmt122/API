@@ -1342,13 +1342,13 @@
         });
 
         descriptionTypewriter
-            .typeString(`Khang on the top`)
+            .typeString(`Khang handsome 😎`)
             .pauseFor(2500)
             .deleteAll(60)
-            .typeString(`im pretty <3`)
+            .typeString(`im pretty  <3`)
             .pauseFor(2500)
             .deleteAll(60)
-            .typeString(`kid try to be a fullstack`)
+            .typeString(`kid try to be a good boiz`)
             .pauseFor(2500)
             .deleteAll(60)
             .typeString(`Im so bad ><`)
@@ -2028,6 +2028,7 @@
                 else if (data.status === 'dnd') statusIcon = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/26d4.png';
                 else statusIcon = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/26aa.png';
                 document.getElementById('discord-status-icon').src = statusIcon;
+                document.getElementById('discord-status-icon').style.display = 'inline-block'; // Đảm bảo hiện icon
 
                 // Game/app đang chơi
                 document.getElementById('discord-activity-name').textContent = data.activity || 'Không hoạt động';
